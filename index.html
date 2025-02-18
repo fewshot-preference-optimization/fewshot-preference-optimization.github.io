@@ -370,10 +370,14 @@
         <h2 class="title is-3" id="theory">Results</h2>
         <div class="content has-text-justified">
         <p>
-          Below, we evaluate FSPO against 4 baselines: (1) a base model generating responses without any personalization, (2) Few-shot Prompting the base model,
+          Below, we evaluate FSPO against 4 baselines: (1) a base model generating responses without any personalization, (2) few-shot prompting the base model,
           (3) few-shot supervised fine-tuning (Pref-FT) based off GPO, and (4) prompting with the ground truth persona. We evaluate FSPO on the 3 benchmark tasks
           and find that FSPO outperforms all baselines in generating personalized responses. We also find that COT enables us to close the gap to the oracle method,
-          where we prompt with the ground truth persona. Additionally, we run a preliminary, controlled human study using Prolific, with a data collection app, that 
+          where we prompt with the ground truth persona.  For Reviews, we have 4 trained users (concise, verbose, positive, negative) and 4 interpolated users
+          (concise + positive, verbose + positive, concise + negative, verbose + negative) to evaluate how FSPO generalizes to unseen users. Additionally, for ELIX,
+          we have 2 tasks: ELIX-easy and ELIX-hard, where ELIX-easy is a simple task with 5 educational levels and ELIX-hard is a more challenging task with specializated
+          educational levels such as a PhD in Physics. For Roleplay, we have 1500 total users and evaluate the performance of FSPO on held-out users and prompts for 
+          generating personalized responses. Additionally, we run a preliminary, controlled human study using Prolific, with a data collection app, that 
           was built to collect human preferences from real human participants. 
         </p>
         <table border="1">
