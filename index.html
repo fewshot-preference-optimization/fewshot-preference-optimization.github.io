@@ -270,8 +270,8 @@
           <p>
             In all, FSPO can be easily instantiated. First, a minibatch of training users is sampled. For each user, we sample a few-shot preference
             dataset and (potentially) a user description. We then fine-tune the model on the few-shot preferences and the user description using
-            a preference optimization loss such as DPO or IPO. This allows us to learn a personalized reward function for each user. If we want to do 
-            COT, we train with teacher-forcing, first predicting tthe loss of the user description and then conditioned on the ground truth user description
+            a preference optimization loss such as DPO or IPO (equations 5 + 6). This allows us to learn a personalized reward function for each user. If we want to do 
+            COT, we train with teacher-forcing, first predicting the loss of the user description and then conditioned on the ground truth user description
             and the few-shot preferences, predict the loss on the responses. We then update with gradient descent. We summarize FSPO in Algorithm 1. 
           </p>
 
