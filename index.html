@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="Study the role of on-policy sampling and negative gradients in existing preference fine-tuning algorithms.">
+        content="Study the personalization of preference fine-tuning and RLHF algorithms. Generate synthetic preference data closing the Sim2Real gap and personalizing to real users.">
   <meta name="keywords" content="RLHF, Preference Fine-Tuning, Synthetic Data, PPO, DPO, RL, LLMs">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Understanding RLHF</title>
+  <title>FSPO</title>
 
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
@@ -42,13 +42,16 @@
         Abstract
       </a>
       <a class="navbar-item" href="#setup" style="color: #fff; border-bottom: 0px solid #fff;">
-        Setup
+        Method Overview
       </a>
       <a class="navbar-item" href="#empirical" style="color: #fff; border-bottom: 0px solid #fff;">
-        Empirical Analysis 
+        Benchmark Tasks 
       </a>
       <a class="navbar-item" href="#theory" style="color: #fff; border-bottom: 0px solid #fff;">
-        Theoretical Analysis
+        Sim2Real
+      </a>
+      <a class="navbar-item" href="#empirical" style="color: #fff; border-bottom: 0px solid #fff;">
+        Results
       </a>
       <a class="navbar-item" href="#BibTeX" style="color: #fff; border-bottom: 0px solid #fff;">
         BibTeX
@@ -61,54 +64,53 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Preference Fine-Tuning of LLMs Should Leverage Suboptimal, On-Policy Data</h1>
+          <h1 class="title is-1 publication-title">FSPO: Few-Shot Preference Optimization of Synthetic Data in LLMs Elicits Effective Personalization to Real Users</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="https://tajwarfahim.github.io/">Fahim Tajwar</a><sup>*1</sup>,</span>
-            <span class="author-block">
-              <a href="https://asap7772.github.io/">Anikait Singh</a><sup>*2</sup>,</span>
-              <span class="author-block">
-              <a href="https://architsharma97.github.io/">Archit Sharma</a><sup>2</sup>,
+              <a href="https://asap7772.github.io/">Anikait Singh</a><sup>*1</sup>,
             </span>
             <span class="author-block">
-              <a href="https://rmrafailov.github.io/">Rafael Rafailov</a><sup>2</sup>,
+              <a href="https://sherylhsu.com/">Sheryl Hsu</a><sup>*1</sup>,
             </span>
             <span class="author-block">
-              <a href="https://www.cs.cmu.edu/~schneide/">Jeff Schneider</a><sup>1</sup>,
+              <a href="https://www.kylehsu.org/">Kyle Hsu</a><sup>1</sup>,
             </span>
             <span class="author-block">
-              <a href="https://tengyangxie.github.io/">Tengyang Xie</a><sup>3</sup>,
+              <a href="https://ericmitchell.ai/">Eric Mitchell</a><sup>1,4</sup>,
             </span>
-            <span class="author-block">
-              <a href="https://cs.stanford.edu/~ermon/">Stefano Ermon</a><sup>2</sup>
-            </span>
-            <span class="author-block">
-              <a href="https://ai.stanford.edu/~cbfinn/">Chelsea Finn</a><sup>2</sup>
-            </span>
-            <span class="author-block">
-              <a href="https://aviralkumar2907.github.io/">Aviral Kumar</a><sup>4</sup>
-            </span>
-          </div>
-
-          <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>*</sup>Equal Contribution (coin-flip)</span>
-            <span class="author-block"><sup>1</sup>Carnegie Mellon University</span>
-            <span class="author-block"><sup>2</sup>Stanford University</span>
             <br/>
-            <span class="author-block"><sup>3</sup>University of Wisconsin, Madison</span>
-            <span class="author-block"><sup>4</sup>Google DeepMind</span>
+            <span class="author-block">
+              <a href="https://cs.stanford.edu/~ermon/">Stefano Ermon</a><sup>1</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://thashim.github.io/">Tatsunori Hashimoto</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://architsharma97.github.io/">Archit Sharma</a><sup>1,2*</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://ai.stanford.edu/~cbfinn/">Chelsea Finn</a><sup>1,3*</sup>
+            </span>
           </div>
 
           <div class="is-size-5 publication-authors">
-            <span class="author-block">
+            <span class="author-block"><sup>*</sup>Equal Contribution/Advising</span>
+            <span class="author-block"><sup>1</sup>Stanford University</span>
+            <span class="author-block"><sup>2</sup>Google DeepMind</span>
+            <span class="author-block"><sup>3</sup>Physical Intelligence</span>
+            <span class="author-block"><sup>4</sup>OpenAI</span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <!-- <span class="author-block">
               ICML 2024
-            </span>
+            </span> -->
 
           <div class="column has-text-centered">
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href="https://arxiv.org/pdf/2404.14367.pdf"
+                <a href="./static/pdf/paper.pdf"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-file-pdf"></i>
@@ -116,7 +118,7 @@
                   <span>Paper</span>
                 </a>
               </span>
-              <span class="link-block">
+              <!-- <span class="link-block">
                 <a href="https://arxiv.org/abs/2404.14367"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
@@ -124,15 +126,25 @@
                   </span>
                   <span>arXiv</span>
                 </a>
-              </span>
+              </span> -->
               <!-- Code Link. -->
               <span class="link-block">
-                <a href="https://github.com/Asap7772/understanding-rlhf"
+                <a href="https://github.com/Asap7772/fewshot-preference-optimization"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fab fa-github"></i>
                   </span>
                   <span>Code</span>
+                  </a>
+              </span>
+
+              <span class="link-block">
+                <a href="https://github.com/Asap7772/fewshot-preference-optimization"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fa fa-database"></i>
+                  </span>
+                  <span>Data</span>
                   </a>
               </span>
 
@@ -148,15 +160,14 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <img src="./static/images/final_picture_teaser.jpg"
+      <img src="./static/images/main_fig_v5.jpg"
         alt="Teaser image."
         class="teaser-image"/>
       <h2 class="subtitle has-text-centered">
-        Which approaches are important for fine-tuning LLMs with preference data and why? Our main finding is that approaches 
-        that utilize on-policy sampling or attempt to push down the likelihood on certain responses (e.g., those with negative gradient 
-        such as DPO) tend to outperform offline and maximum likelihood objectives. Combining on-policy sampling with methods that 
-        handle negative gradients well leads to complementary benefits. In this paper, we investigate the behavior of preference 
-        fine-tuning methods under various coverage conditions and arrive at these conclusions. 
+        As language models increasingly interact with a diverse user base, it becomes important for models to generate responses 
+        that align with individual user preferences. Few-Shot Preference Optimization (FSPO) is a meta-learning framework that 
+        leverages the strong in-context learning capabilities of an LLM to capture the diversity of human preferences. We additionally
+        study crucial design decision to allow for effective transfer from synthetic to real users through synthetic preference data.
       </h2>
     </div>
   </div>
@@ -168,28 +179,26 @@
     <!-- Abstract. -->
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
+        <div class="box" style="background-color:#ffcccb">
         <h2 class="title is-3" id="abstract">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Learning from preference labels plays a crucial role in fine-tuning large language models. There are several
-            distinct approaches for preference fine-tuning, including supervised learning, on-policy reinforcement learning
-            (RL), and contrastive learning. Different methods come with different implementation tradeoffs and perfor-
-            mance differences, and existing empirical findings present different conclusions, for instance, some results
-            show that online RL is quite important to attain good fine-tuning results, while others find (offline) contrastive
-            or even purely supervised methods sufficient. This raises a natural question: what kind of approaches are
-            important for fine-tuning with preference data and why? In this paper, we answer this question by performing
-            a rigorous analysis of a number of fine-tuning techniques on didactic and full-scale LLM problems. Our main
-            finding is that, in general, approaches that use on-policy sampling or attempt to minimize the likelihood on
-            certain responses (i.e., employ a negative gradient) outperform offline and maximum likelihood objectives. We
-            conceptualize our insights and unify methods that use on-policy sampling or negative gradient under the notion
-            of mode-seeking objectives, extended to categorical distributions. Mode-seeking objectives are able to alter
-            probability mass on specific bins of a categorical distribution at a fast rate compared to maximum likelihood,
-            allowing them to relocate masses across bins more effectively. Our analysis prescribes actionable insights for
-            preference fine-tuning of LLMs and informs how data should be collected for maximal improvement.
+            Effective personalization of LLMs is critical for a broad range of user-interfacing applications such as virtual assistants 
+            and content curation. Inspired by the strong in-context learning capabilities of LLMs, we propose Few-Shot 
+            Preference Optimization (FSPO), which reframes reward modeling as a meta-learning problem. Under this framework, an LLM learns to 
+            quickly adapt to a user via a few labeled preferences from that user, constructing a personalized reward function for them. 
+            Additionally, since real-world preference data is scarce and challenging to collect at scale, we propose careful design choices to 
+            construct synthetic preference datasets for personalization, generating over 1M synthetic personalized preferences using publicly available 
+            LLMs. In particular, to successfully transfer from synthetic data to real users, we find it crucial for the data to exhibit both high 
+            diversity and coherent, self-consistent structure. We evaluate FSPO on personalized open-ended generation for up to 1,500 synthetic users 
+            across across three domains: movie reviews, pedagogical adaptation based on educational background, and general question answering, 
+            along with a controlled human study. Overall, FSPO achieves an 87% Alpaca Eval winrate on average in generating responses that are 
+            personalized to synthetic users and a 72% winrate with real human users in open-ended question answering. 
           </p>
         </div>
       </div>
     </div>
+  </div>
     <!--/ Abstract. -->
   <hr>
 <section class="section">
@@ -198,17 +207,16 @@
     <div class="columns is-centered">
       <div class="column is-full-width">
 
-        <h2 class="title is-3" id="setup">Setup</h2>
+        <h2 class="title is-3" id="setup">Method Overview</h2>
         <div class="content has-text-justified">
           <p>
-            We considered three problems for our experiments: (1) a didactic bandit problems that are easy to simulate, (2) Synthetic LLM 
-            fine-tuning problems, where ground-truth reward functions exist and are easy to track (though we still train the policy against a proxy reward model), 
-            and (3) Full-scale LLM fine-tuning on AlpacaFarm and UltraFeedback. We use these problems to study the impact of on-policy sampling
-            and negative gradients on performance and behavior of algorithms.
+            Generally, preference fine-tuning algorithms aim to optimize a reward function that captures the preferences of a user. To do so, 
+            these approaches aggregate preferences from a user into a single preference dataset, which is then used to fine-tune a language model 
+            through RLHF or Preference Optimization. Can we instead learn a personalized reward function directly from a few preferences of a user?
           </p>
         </div>
         
-        <h3 class="title is-4">Didactic Bandit</h3>
+        <h3 class="title is-4">Meta-learning motivation and objective.</h3>
         <div class="content has-text-justified">
           <!-- Create Bullet Point List to Summarize -->
           <ul>
@@ -216,7 +224,7 @@
           </ul>
         </div>
 
-        <h3 class="title is-4">Synthetic LLM</h3>
+        <h3 class="title is-4">User description chain-of-thought (COT).</h3>
         <div class="content has-text-justified">
           <!-- Create Bullet Point List to Summarize -->
           <ul>
@@ -230,7 +238,7 @@
           </ul>
         </div>
 
-        <h3 class="title is-4">Full-Scale LLM</h3>
+        <h3 class="title is-4">Full algorithm.</h3>
         <div class="content has-text-justified">
           <!-- Create Bullet Point List to Summarize -->
           <ul>
@@ -239,7 +247,7 @@
           </ul>
         </div>
 
-        <h3 class="title is-4">Coverage Conditions and Geometric Relationships</h3>
+        <h3 class="title is-4">User representation through preference labels.</h3>
 
         <div class="content has-text-justified">
           <p>
@@ -518,7 +526,7 @@
   <div class="container">
     <div class="content has-text-centered">
       <a class="icon-link"
-         href="./static/pdf/understanding_rlhf.pdf">
+         href="./static/pdf/paper.pdf">
         <i class="fas fa-file-pdf"></i>
       </a>
       <a class="icon-link" href="https://github.com/Asap7772/understanding-rlhf" class="external-link" disabled>
@@ -527,7 +535,7 @@
     </div>
     <div class="columns is-centered">
       <p>
-        Corresponding Authors: <a href="mailto:anikait@stanford.edu">Anikait Singh</a>, <a href="mailto:ftajwar@cs.cmu.edu">Fahim Tajwar</a>.<br>
+        The corresponding author for this work is <a href="mailto:anikait@stanford.edu">Anikait Singh</a>.<br>
         We thank the Nerfies Team for their <a href="https://github.com/nerfies/nerfies.github.io">website template</a>.
       </p>
     </div>
